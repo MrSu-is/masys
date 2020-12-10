@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {HashRouter as Router,Switch,Route,Redirect} from 'react-router-dom'
 import App from './App';
+import { logRout } from './routers'
 import reportWebVitals from './reportWebVitals';
 
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <Router> 
+      <Switch>
+        <Route path="/admin" render={routeProps=><App {...routeProps} />}/>
+        {logRout.map(route => { 
+          return <Route key={route.path} path={route.path} component={route.component} />;
+        })}
+        <Redirect to="/404" /> 
+      </Switch>
+    </Router>,
   document.getElementById('root')
 );
 
