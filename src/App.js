@@ -5,9 +5,10 @@ import {Switch,Route,Redirect} from 'react-router-dom';
 import "antd/dist/antd.css"
 import {adminRoute, logRout} from './routers'
 import Frame from './components/Frame/index'
+import { isLoged } from './utils/auth'
 
 function App() {
-  return (
+  return ( isLoged()?
     <Frame>
       <h1>这是第一个组件</h1>
       <Switch>
@@ -23,9 +24,12 @@ function App() {
             />
           );
         })}
+
+        <Redirect to={adminRoute[0].path}  from="/admin"/> 
         <Redirect to='/404'/>
       </Switch>
-    </Frame>
+    </Frame>:
+    <Redirect to="/login"/>
   );
 }
 

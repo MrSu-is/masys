@@ -26,7 +26,7 @@ export  const adminRoute = [{
     icom: 'shop',
     exact: true 
 },{
-    path:'/admin/products/:change',
-    component:edit,
+    path:'/admin/edit/:ID?',
+    component: edit,
     isShow: false
 }]

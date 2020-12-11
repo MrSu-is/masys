@@ -1,10 +1,13 @@
 import React from 'react';
-import {withRouter} from 'react-router-dom'
-import { Layout, Menu, Breadcrumb } from 'antd';
+import {withRouter} from 'react-router-dom';
+import { Layout, Menu, Breadcrumb, Dropdown,Icon, Avatar, message } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
-import {adminRoute} from '../../routers'
-import '../../App.css'
+import {adminRoute} from '../../routers';
+import '../../App.css';
+import './frame.css';
+import { clearToken } from "../../utils/auth"
+
 
 
 const { SubMenu } = Menu;
@@ -12,16 +15,38 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const routers = adminRoute.filter(route=>route.isShow)
 function index(props) {
+  const popMenu = (
+    <Menu onClick={(p)=>{
+      if(p.key == 'logOut'){
+        clearToken()
+        props.history.push('/login')
+      }else{
+        message.info(p.key)
+      }
+    }}>
+      <Menu.Item key="noti">
+        通知中心
+      </Menu.Item >
+      <Menu.Item key="setting">
+        设置
+      </Menu.Item>
+      <Menu.Item key="logOut">
+        退出
+      </Menu.Item>
+    </Menu>
+  );
     return (
         <Layout>
 <Header className="header">
   <div className="logo" />
-  <h2 style={{ margin: '0 350px',color:'white' }}>管理系统</h2>
-  <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-    <Menu.Item key="1">nav 1</Menu.Item>
-    <Menu.Item key="2">nav 2</Menu.Item>
-    <Menu.Item key="3">nav 3</Menu.Item>
-  </Menu>
+  <h2 style={{ left:"50%",color:'white' }}>管理系统</h2>
+  <Dropdown overlay={popMenu}>
+    <div>
+      <Avatar>U</Avatar>
+      <span>超管</span>
+      <Icon type="down"/>
+    </div>
+  </Dropdown>
 </Header>
 <Layout>
   <Sider width={200} className="site-layout-background">
