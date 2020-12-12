@@ -1,7 +1,8 @@
 import React from 'react'
-import { Form, Icon, Input, Button, Checkbox,Card } from 'antd';
+import { Form, Icon, Input, Button, Checkbox,Card, message } from 'antd';
 import "./login.css";
 import { setToken } from '../utils/auth'
+import { loginApi } from '../service/auth'
 
 
 function login(props) {
@@ -13,6 +14,24 @@ function login(props) {
             console.log('Received values of form: ', values);
             setToken(values.username)
             props.history.push("/admin");
+            /*
+              loginApi({
+              userName: values.username,
+              passWord: values.password
+            })
+            .then(res => {
+              if(res.code === 'success'){
+                message.success('登陆成功')
+                setToken(res.token)
+                props.history.push("/admin")
+              }else{
+                message.info(res.message)
+              }
+              //console.log(res)
+          })
+            .catch(err => {
+              message.error('不存在该用户')
+            })*/
           }
         });
     }

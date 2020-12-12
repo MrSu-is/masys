@@ -1,7 +1,25 @@
-import React from 'react'
+import React, { useState,useEffect } from 'react'
 import { Form,Card,Input,Button, message } from 'antd'
+import { createApi,getOneById,change } from "../../../service/product"
 
-function edit(props) {
+function Edit(props) {
+    const [currentData,setCurrentData] = useState({})
+    /*useEffect(()=>{
+        if(props.match.params._id){
+            getOneById(props.match.params._id)
+                .then(res=>{
+                    console.log(res)
+                    setCurrentData(res)
+                })
+        }
+    },[])
+    if(props.match.param._id){
+        getOneById(props.match.params._id)
+            .then(res=>{
+                console.log(res)
+                setCurrentData(res)
+            })
+    }*/
     const { getFieldDecorator }= props.form
     const priceValidate = (rule,value,callback) => {
         if(value*1<0){
@@ -16,8 +34,35 @@ function edit(props) {
         //验证
         props.form.validateFieldsAndScroll((err,values) => {
             if(!err){
-                console.log(values);
-                console.log('已提交');
+                //console.log(values);
+                //console.log('已提交');
+                /*if(props.match.params,id){
+                    change(props.match.params.id,values)
+                    .then(res=>{
+                        console.log(res);
+                        props.history.push('/admin/products')
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
+                }else{
+                    createApi(values)
+                    .then(res=>{
+                        console.log(res);
+                        props.history.push('/admin/products')
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
+                }*/
+                createApi(values)
+                    .then(res=>{
+                        console.log(res);
+                        props.history.push('/admin/products')
+                    })
+                    .catch(err=>{
+                        console.log(err)
+                    })
             } else{
                 message.error('错误');
             }
@@ -31,7 +76,8 @@ function edit(props) {
                         rules: [{
                             required: true,
                             message: '请输入商品名'
-                        }]
+                        }],
+                        initivalValue: currentData.name
                     }
                     )(<Input placeholder="请输入商品名"/>)
                 }
@@ -46,7 +92,8 @@ function edit(props) {
                             validator: priceValidate
                         }
                         
-                    ]
+                    ],
+                    initivalValue: currentData.name
                     }
                     )(<Input placeholder="请输入价格"/>)
                 }
@@ -59,4 +106,4 @@ function edit(props) {
     )
 }
 
-export default Form.create({name:'productEdit'})(edit) 
+export default Form.create({name:'productEdit'})(Edit) 
