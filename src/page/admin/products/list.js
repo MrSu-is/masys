@@ -2,6 +2,7 @@ import React,{useEffect,useState} from 'react'
 import { Card,Table,Button,Popconfirm } from 'antd'
 import { listApi,delt,change } from '../../../service/product'
 import './list.css'
+import { serverUrl } from '../../../utils/config'
 
 
 
@@ -46,7 +47,13 @@ function List(props) {
         title:'命名',
         dataIndex: 'name',
 
-    },{
+    },
+    {
+        title:'图片',
+        dataIndex: 'coverImg',
+        render: (txt,record) =>record.coverImg?<img src={serverUrl + record.coverImg} alt={record.name} style={{width:"100px"}}/>:("暂无图片")
+    },
+    {
         title:'价格',
         dataIndex: 'price'
     },

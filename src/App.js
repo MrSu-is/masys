@@ -10,7 +10,7 @@ import { isLoged } from './utils/auth'
 function App() {
   return ( isLoged()?
     <Frame>
-      <h1>这是第一个组件</h1>
+      
       <Switch>
         {adminRoute.map(route => {
           return (

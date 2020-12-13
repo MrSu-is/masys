@@ -5,9 +5,13 @@ import {HashRouter as Router,Switch,Route,Redirect} from 'react-router-dom'
 import App from './App';
 import { logRout } from './routers'
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux'
+import store from './store'
+
 
 
 ReactDOM.render(
+  <Provider store={store}>
     <Router> 
       <Switch>
         <Route path="/admin" render={routeProps=><App {...routeProps} />}/>
@@ -18,7 +22,8 @@ ReactDOM.render(
         <Redirect to="/404" /> 
 
       </Switch>
-    </Router>,
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
 

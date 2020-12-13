@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react'
-import { Form,Card,Input,Button, message } from 'antd'
+import { Form,Card,Input,Button, message,Icon,Upload } from 'antd'
 import { createApi,getOneById,change } from "../../../service/product"
+import { serverUrl } from '../../../utils/config'
 
 function Edit(props) {
     const [currentData,setCurrentData] = useState({})
@@ -10,6 +11,7 @@ function Edit(props) {
                 .then(res=>{
                     console.log(res)
                     setCurrentData(res)
+                    setImgUrl(res.coverImg)
                 })
         }
     },[])
@@ -37,7 +39,7 @@ function Edit(props) {
                 //console.log(values);
                 //console.log('已提交');
                 /*if(props.match.params,id){
-                    change(props.match.params.id,values)
+                    change(props.match.params.id,{...values,coverImg: imageUrl,content: editorState.toHTML()})
                     .then(res=>{
                         console.log(res);
                         props.history.push('/admin/products')
@@ -55,7 +57,7 @@ function Edit(props) {
                         console.log(err)
                     })
                 }*/
-                createApi(values)
+                createApi({...values, coverImg:imageUrl,/*content:editorState.toHTML()*/})
                     .then(res=>{
                         console.log(res);
                         props.history.push('/admin/products')
@@ -68,6 +70,26 @@ function Edit(props) {
             }
         });
     };
+    const [imageUrl,setImageUrl] = useState('')
+    const [loading,setLoading] = useState(false)
+    const handleChange = info => {
+        if (info.file.status === 'uploading') {
+          setLoading( true );
+          return;
+        }
+        if (info.file.status === 'done') {
+          // Get this url from response in real world.
+          setLoading(false);
+          console.log(info);
+          setImageUrl(info.file.response.info)
+        }
+      };
+    const uploadButton = (
+        <div>
+          <Icon type={loading ? 'loading' : 'plus'} />
+          <div className="ant-upload-text">Upload</div>
+        </div>
+      );
     return (
         <Card title="修改">
             <Form onSubmit = {e=>handleSubmit(e)}>
@@ -97,6 +119,18 @@ function Edit(props) {
                     }
                     )(<Input placeholder="请输入价格"/>)
                 }
+                </Form.Item>
+                <Form.Item label="图片">
+                <Upload
+                    name="file"
+                    listType="picture-card"
+                    className="avatar-uploader"
+                    showUploadList={false}
+                    action={serverUrl+'/api/v1/common/file_upload'}
+                    onChange={(info)=>this.handleChange}
+                >
+                    {imageUrl ? <img src={serverUrl + imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                </Upload>
                 </Form.Item>
                 <Form.Item>
                     <Button htmlType="submit" type="primary">保存</Button>

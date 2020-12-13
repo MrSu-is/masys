@@ -3,6 +3,7 @@ import index from "../page/admin/darshboard";
 import edit from "../page/admin/products/edit";
 import list from "../page/admin/products/list";
 import login from "../page/login";
+import Index from "../page/admin/notice/index"
 
 export const logRout = [{
     path: '/login',
@@ -29,4 +30,10 @@ export  const adminRoute = [{
     path:'/admin/edit/:ID?',
     component: edit,
     isShow: false
-}]
+},
+{
+    path:'/admin/notice',
+    component: Index,
+    isShow: false
+},
+]
