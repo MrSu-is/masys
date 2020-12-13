@@ -2,6 +2,8 @@ import React,{useEffect,useState} from 'react'
 import { Card,Table,Button,Popconfirm } from 'antd'
 import { listApi,delt,change } from '../../../service/product'
 import './list.css'
+import { connect } from 'react-redux'
+import { loadProduct } from '../../../store/actions/product'
 import { serverUrl } from '../../../utils/config'
 
 
@@ -18,25 +20,34 @@ const data = [{
 
 function List(props) { 
     //定义局部状态
-    const [data, setData] = useState([])
+    //const [data, setData] = useState([])
+    const { list,page,total } = props
     useEffect(()=>{
-        listApi().then(res => {
+        props.dispatch(loadProduct({
+            page:1,
+            //name:'God of War'
+        }))
+       /* listApi().then(res => {
             console.log(res);
             setData(res.products)
             setTotal(res.totalCount)
-        });
+        });*/
     },[]);
     
-    const loadData = (page)=>{
+    const loadData = ()=>{
+        props.dispatch(loadProduct({
+            page:page,
+            //name:'God of War'
+        }))
         //console.log(page);
-        listApi(page).then(res => {
+        /*listApi(page).then(res => {
             //console.log(page);
             setData(res.products)
             setTotal(res.totalCount)
             setCurrentPage(page)
-        });};
-    const [total, setTotal] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
+        });*/};
+    //const [total, setTotal] = useState(0);
+    //const [currentPage, setCurrentPage] = useState(1);
     const tablethings = [{
         title:'编号',
         key:'ID',
@@ -72,14 +83,14 @@ function List(props) {
                     onConfirm={()=>
                     //console.log("确定")
                     delt(record._id).then(res=>{
-                        loadData(currentPage);
+                        loadData();
                     })
                     }>
                     <Button style={{margin:"0 1rem"}} size="small">删除</Button>
                     </Popconfirm>
                     <Button size="small" onClick={()=>{
                         change(record._id,{onSale: !record.onSale}).then(RES =>{
-                            loadData(currentPage)
+                            loadData()
                         })
                     }}>{record.onSale?"下架":"补货"}</Button>
                 </div>
@@ -92,9 +103,9 @@ function List(props) {
             </Button>
             }
         >
-            <Table rowKey="ID" rowClassName={record=>(record.onSale?"":"bkgcolr")} pagination={{total,defaultPageSize:5,/*onChange:loadData*/}} columns = {tablethings} bordered dataSource={data}/>
+            <Table rowKey="ID" rowClassName={record=>(record.onSale?"":"bkgcolr")} pagination={{total,defaultPageSize:5,onChange:p=>{props.dispatch(loadProduct({page:p}))}}} columns = {tablethings} bordered dataSource={list}/>
         </Card>
     ) 
 }
 
-export default List
+export default connect(state=>state.product)(List)

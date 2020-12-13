@@ -2,6 +2,10 @@ import React, { useState,useEffect } from 'react'
 import { Form,Card,Input,Button, message,Icon,Upload } from 'antd'
 import { createApi,getOneById,change } from "../../../service/product"
 import { serverUrl } from '../../../utils/config'
+// 引入编辑器组件
+import BraftEditor from 'braft-editor'
+// 引入编辑器样式
+import 'braft-editor/dist/index.css'
 
 function Edit(props) {
     const [currentData,setCurrentData] = useState({})
@@ -12,6 +16,9 @@ function Edit(props) {
                     console.log(res)
                     setCurrentData(res)
                     setImgUrl(res.coverImg)
+                    console.log(res.content)
+                    setEditorstate(BraftEditor.createEditorstate(res.content))
+                    
                 })
         }
     },[])
@@ -20,7 +27,7 @@ function Edit(props) {
             .then(res=>{
                 console.log(res)
                 setCurrentData(res)
-            })
+            }) 
     }*/
     const { getFieldDecorator }= props.form
     const priceValidate = (rule,value,callback) => {
@@ -29,16 +36,18 @@ function Edit(props) {
         } else{
             callback();
         }
-    }
+    } 
     const handleSubmit = e=>{
-        console.log(e);
+
+        console.log(editorState.toHTML()) //获取当前富文本的内容
+        
         e.preventDefault();
         //验证
         props.form.validateFieldsAndScroll((err,values) => {
             if(!err){
                 //console.log(values);
                 //console.log('已提交');
-                /*if(props.match.params,id){
+                if(props.match.params.id){
                     change(props.match.params.id,{...values,coverImg: imageUrl,content: editorState.toHTML()})
                     .then(res=>{
                         console.log(res);
@@ -56,7 +65,7 @@ function Edit(props) {
                     .catch(err=>{
                         console.log(err)
                     })
-                }*/
+                }
                 createApi({...values, coverImg:imageUrl,/*content:editorState.toHTML()*/})
                     .then(res=>{
                         console.log(res);
@@ -90,6 +99,11 @@ function Edit(props) {
           <div className="ant-upload-text">Upload</div>
         </div>
       );
+      //富文本编辑器
+    const [editorState, setEditorState] = useState(BraftEditor.createEditorState())
+    const handleEditorChange = (e) => {
+        setEditorState( e )
+    }
     return (
         <Card title="修改">
             <Form onSubmit = {e=>handleSubmit(e)}>
@@ -131,6 +145,12 @@ function Edit(props) {
                 >
                     {imageUrl ? <img src={serverUrl + imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </Upload>
+                </Form.Item>
+                <Form.Item lable="商品详情">
+                <BraftEditor
+                    value={editorState}
+                    onChange={(e)=>handleEditorChange(e)}
+                />
                 </Form.Item>
                 <Form.Item>
                     <Button htmlType="submit" type="primary">保存</Button>
