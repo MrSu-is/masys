@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.5.0",
     "antd": "^3.26.14",
     "anti": "^0.1.7",
+    "axios": "^0.21.0",
     "braft-editor": "^2.3.9",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

@@ -12,9 +12,9 @@ function login(props) {
         props.form.validateFields((err, values) => {
           if (!err) {
             console.log('Received values of form: ', values);
-            setToken(values.username)
-            props.history.push("/admin");
-            /*
+            //setToken(values.username)
+            //props.history.push("/admin");
+            
               loginApi({
               userName: values.username,
               passWord: values.password
@@ -31,7 +31,7 @@ function login(props) {
           })
             .catch(err => {
               message.error('不存在该用户')
-            })*/
+            })
           }
         });
     }

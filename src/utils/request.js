@@ -65,6 +65,6 @@ export function del(url){
     return instance.del(url)
 }
 
-export function getOneById(ID){
-  return get('/api/v1/admin/products/${ID}')
+export function getOneById(_id){
+  return get('/api/v1/admin/products/${_id}')
 }

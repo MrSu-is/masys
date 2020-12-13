@@ -9,15 +9,17 @@ import 'braft-editor/dist/index.css'
 
 function Edit(props) {
     const [currentData,setCurrentData] = useState({})
+    const [imageUrl,setImageUrl] = useState('')
+    const [editorState, setEditorState] = useState(BraftEditor.createEditorState())
     /*useEffect(()=>{
         if(props.match.params._id){
             getOneById(props.match.params._id)
                 .then(res=>{
                     console.log(res)
                     setCurrentData(res)
-                    setImgUrl(res.coverImg)
+                    setImageUrl(res.coverImg)
                     console.log(res.content)
-                    setEditorstate(BraftEditor.createEditorstate(res.content))
+                    setEditorState(BraftEditor.createEditorstate(res.content))
                     
                 })
         }
@@ -66,7 +68,7 @@ function Edit(props) {
                         console.log(err)
                     })
                 }
-                createApi({...values, coverImg:imageUrl,/*content:editorState.toHTML()*/})
+                createApi({...values, coverImg:imageUrl,content:editorState.toHTML()})
                     .then(res=>{
                         console.log(res);
                         props.history.push('/admin/products')
@@ -79,7 +81,7 @@ function Edit(props) {
             }
         });
     };
-    const [imageUrl,setImageUrl] = useState('')
+    
     const [loading,setLoading] = useState(false)
     const handleChange = info => {
         if (info.file.status === 'uploading') {
@@ -100,7 +102,7 @@ function Edit(props) {
         </div>
       );
       //富文本编辑器
-    const [editorState, setEditorState] = useState(BraftEditor.createEditorState())
+    
     const handleEditorChange = (e) => {
         setEditorState( e )
     }
