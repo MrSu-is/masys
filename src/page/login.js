@@ -17,7 +17,7 @@ function login(props) {
             
               loginApi({
               userName: values.username,
-              passWord: values.password
+              password: values.password
             })
             .then(res => {
               if(res.code === 'success'){

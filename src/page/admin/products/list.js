@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react'
 import { Card,Table,Button,Popconfirm } from 'antd'
-import { listApi,delt,change } from '../../../service/product'
+import { listApi,delte,change } from '../../../service/product'
 import './list.css'
 import { connect } from 'react-redux'
 import { loadProduct } from '../../../store/actions/product'
@@ -8,7 +8,7 @@ import { serverUrl } from '../../../utils/config'
 
 
 
-const data = [{
+/*const data = [{
     ID:278001,
     name: '2077',
     price: 298
@@ -16,7 +16,7 @@ const data = [{
     ID:278002,
     name:'Elden Ring',
     price: 358
-}]
+}]*/
 
 function List(props) { 
     //定义局部状态
@@ -25,7 +25,7 @@ function List(props) {
     useEffect(()=>{
         props.dispatch(loadProduct({
             page:1,
-            //name:'God of War'
+            
         }))
        /* listApi().then(res => {
             console.log(res);
@@ -37,7 +37,7 @@ function List(props) {
     const loadData = ()=>{
         props.dispatch(loadProduct({
             page:page,
-            //name:'God of War'
+            
         }))
         //console.log(page);
         /*listApi(page).then(res => {
@@ -48,9 +48,10 @@ function List(props) {
         });*/};
     //const [total, setTotal] = useState(0);
     //const [currentPage, setCurrentPage] = useState(1);
-    const tablethings = [{
+    const tablethings = [
+    {
         title:'编号',
-        key:'ID',
+        key:"_id",
         width: 80,
         align: 'center',
         render:(txt,record,index)=>index+1
@@ -62,7 +63,11 @@ function List(props) {
     {
         title:'图片',
         dataIndex: 'coverImg',
-        render: (txt,record) =>record.coverImg?<img src={serverUrl + record.coverImg} alt={record.name} style={{width:"100px"}}/>:("暂无图片")
+        render: (txt,record) =>record.coverImg?(
+        <img src={serverUrl + record.coverImg} 
+        alt={record.name} 
+        style={{width:"100px"}}/>
+        ):("暂无图片")
     },
     {
         title:'价格',
@@ -78,18 +83,23 @@ function List(props) {
         render: (txt,record,index) => {
             return(
                 <div>
-                    <Button type="primary" size="small" onClick={()=>{props.history.push('/admin/products/edit/${record.ID}')}}>修改</Button>
+                    <Button 
+                    type="primary" 
+                    size="small" 
+                    onClick={()=>{
+                        props.history.push(`/admin/edit/${record._id}`);
+                        }}>修改</Button>
                     <Popconfirm title="确定删除此项？" onCancel={() => console.log('取消')} 
-                    onConfirm={()=>
+                    onConfirm={()=>{
                     //console.log("确定")
-                    delt(record._id).then(res=>{
+                    delte(record._id).then(res=>{
                         loadData();
-                    })
+                    })}
                     }>
                     <Button style={{margin:"0 1rem"}} size="small">删除</Button>
                     </Popconfirm>
                     <Button size="small" onClick={()=>{
-                        change(record._id,{onSale: !record.onSale}).then(RES =>{
+                        change(record._id,{onSale: !record.onSale}).then(res =>{
                             loadData()
                         })
                     }}>{record.onSale?"下架":"补货"}</Button>
@@ -103,7 +113,7 @@ function List(props) {
             </Button>
             }
         >
-            <Table rowKey="ID" rowClassName={record=>(record.onSale?"":"bkgcolr")} pagination={{total,defaultPageSize:5,onChange:p=>{props.dispatch(loadProduct({page:p}))}}} columns = {tablethings} bordered dataSource={list}/>
+            <Table rowKey="_id" rowClassName={record=>(record.onSale?"":"bkgcolr")} pagination={{total,defaultPageSize:5,onChange:p=>{props.dispatch(loadProduct({page:p}))}}} columns = {tablethings} bordered dataSource={list}/>
         </Card>
     ) 
 }

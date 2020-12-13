@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import { Botton } from "antd";
 import {Switch,Route,Redirect} from 'react-router-dom';
 import "antd/dist/antd.css"
 import {adminRoute, logRout} from './routers'
@@ -29,7 +27,7 @@ function App() {
         <Redirect to='/404'/>
       </Switch>
     </Frame>:
-    <Redirect to="/login"/>
+    (<Redirect to="/login"/>)
   );
 }
 

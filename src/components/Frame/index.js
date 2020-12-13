@@ -1,7 +1,6 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Dropdown,Icon, Avatar, message,Badge } from 'antd';
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import {adminRoute} from '../../routers';
 import '../../App.css';
@@ -12,13 +11,13 @@ import { connect } from "react-redux"
 
 
 const { SubMenu } = Menu;
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 const routers = adminRoute.filter(route=>route.isShow)
 function index(props) {
   console.log(props)
   const popMenu = (
-    <Menu onClick={(p)=>{
+    <Menu onClick={p=>{
       if(p.key == 'logOut'){
         clearToken()
         props.history.push('/login')
@@ -59,14 +58,17 @@ function index(props) {
   <Sider width={200} className="site-layout-background">
     <Menu
       mode="inline"
-      defaultSelectedKeys={['1']}
+      defaultSelectedKeys={[props.location.pathname]}
       defaultOpenKeys={['sub1']}
       style={{ height: '100%', borderRight: 0 }}
     >
       {routers.map(route=>{
-            return (<Menu.Item key={route.path} onClick={p=>props.history.push(p.key)}>
-            {route.title}
-            </Menu.Item>)
+            return (
+            <Menu.Item key={route.path} onClick={p=>props.history.push(p.key)}>
+              <Icon type={route.icon} />
+              {route.title}
+            </Menu.Item>
+            )
         })}
     </Menu>
   </Sider>
@@ -95,4 +97,4 @@ function index(props) {
 
 const mapStateToProps = state=>state.notice
 
-export default connect(state=>state)(withRouter(index))
+export default connect(mapStateToProps)(withRouter(index))

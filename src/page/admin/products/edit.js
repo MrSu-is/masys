@@ -3,35 +3,36 @@ import { Form,Card,Input,Button, message,Icon,Upload } from 'antd'
 import { createApi,getOneById,change } from "../../../service/product"
 import { serverUrl } from '../../../utils/config'
 // 引入编辑器组件
-import BraftEditor from 'braft-editor'
+//import BraftEditor from 'braft-editor'
 // 引入编辑器样式
-import 'braft-editor/dist/index.css'
+//import 'braft-editor/dist/index.css'
 
 function Edit(props) {
+    const { getFieldDecorator }= props.form
     const [currentData,setCurrentData] = useState({})
     const [imageUrl,setImageUrl] = useState('')
-    const [editorState, setEditorState] = useState(BraftEditor.createEditorState())
-    /*useEffect(()=>{
-        if(props.match.params._id){
-            getOneById(props.match.params._id)
+    //const [editorState, setEditorState] = useState()
+    useEffect(()=>{
+        if(props.match.params.id){
+            getOneById(props.match.params.id)
                 .then(res=>{
-                    console.log(res)
+                    //console.log(res)
                     setCurrentData(res)
                     setImageUrl(res.coverImg)
-                    console.log(res.content)
-                    setEditorState(BraftEditor.createEditorstate(res.content))
+                    //console.log(res.content)
+                    //setEditorState(BraftEditor.createEditorState(res.content))
                     
                 })
         }
     },[])
-    if(props.match.param._id){
-        getOneById(props.match.params._id)
-            .then(res=>{
-                console.log(res)
-                setCurrentData(res)
-            }) 
-    }*/
-    const { getFieldDecorator }= props.form
+        /*if(props.match.param.id){
+            getOneById(props.match.params.id)
+                .then(res=>{
+                    console.log(res)
+                    setCurrentData(res)
+                }) 
+        }*/
+    
     const priceValidate = (rule,value,callback) => {
         if(value*1<0){
             callback("价格不能小于0")
@@ -41,7 +42,7 @@ function Edit(props) {
     } 
     const handleSubmit = e=>{
 
-        console.log(editorState.toHTML()) //获取当前富文本的内容
+        //console.log(editorState.toHTML()) //获取当前富文本的内容
         
         e.preventDefault();
         //验证
@@ -50,16 +51,23 @@ function Edit(props) {
                 //console.log(values);
                 //console.log('已提交');
                 if(props.match.params.id){
-                    change(props.match.params.id,{...values,coverImg: imageUrl,content: editorState.toHTML()})
+                    change(props.match.params.id,
+                        {
+                            ...values,
+                            coverImg: imageUrl,
+                            //content: editorState.toHTML()
+                        })
                     .then(res=>{
-                        console.log(res);
+                        //console.log(res);
                         props.history.push('/admin/products')
                     })
                     .catch(err=>{
                         console.log(err)
                     })
                 }else{
-                    createApi(values)
+                    createApi({...values, coverImg:imageUrl,
+                        //content:editorState.toHTML()
+                    })
                     .then(res=>{
                         console.log(res);
                         props.history.push('/admin/products')
@@ -68,14 +76,7 @@ function Edit(props) {
                         console.log(err)
                     })
                 }
-                createApi({...values, coverImg:imageUrl,content:editorState.toHTML()})
-                    .then(res=>{
-                        console.log(res);
-                        props.history.push('/admin/products')
-                    })
-                    .catch(err=>{
-                        console.log(err)
-                    })
+               
             } else{
                 message.error('错误');
             }
@@ -103,11 +104,15 @@ function Edit(props) {
       );
       //富文本编辑器
     
-    const handleEditorChange = (e) => {
+    /*const handleEditorChange = e => {
         setEditorState( e )
-    }
+    }*/
     return (
-        <Card title="修改">
+        <Card title="修改" extra={
+            <Button onClick={() => props.history.push("/admin/products")}>
+              返回
+            </Button>}
+                  >
             <Form onSubmit = {e=>handleSubmit(e)}>
                 <Form.Item label="商品名">{
                     getFieldDecorator('name',{
@@ -131,7 +136,7 @@ function Edit(props) {
                         }
                         
                     ],
-                    initivalValue: currentData.name
+                    initivalValue: currentData.price
                     }
                     )(<Input placeholder="请输入价格"/>)
                 }
@@ -142,17 +147,19 @@ function Edit(props) {
                     listType="picture-card"
                     className="avatar-uploader"
                     showUploadList={false}
-                    action={serverUrl+'/api/v1/common/file_upload'}
-                    onChange={(info)=>this.handleChange}
+                    action={serverUrl+"/api/v1/common/file_upload"}
+                    onChange={info => handleChange(info)}
                 >
-                    {imageUrl ? <img src={serverUrl + imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                    {imageUrl ? <img src={serverUrl + imageUrl} 
+                    alt="avatar" 
+                    style={{ width: '100%' }} /> : (uploadButton)}
                 </Upload>
                 </Form.Item>
                 <Form.Item lable="商品详情">
-                <BraftEditor
+                {/*<BraftEditor
                     value={editorState}
-                    onChange={(e)=>handleEditorChange(e)}
-                />
+                    onChange={e=>handleEditorChange(e)}
+                />*/}
                 </Form.Item>
                 <Form.Item>
                     <Button htmlType="submit" type="primary">保存</Button>

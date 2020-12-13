@@ -15,7 +15,7 @@ export function listApi(page=1){
 */
 
 export function createApi(data) {
-    return post('/api/v1/auth/products',data)
+    return post('/api/v1/products',data)
 }
 
 /*
@@ -24,8 +24,8 @@ export function createApi(data) {
 *@param {*} data
 */
 
-export function change(ID,data) {
-    return put('/api/v1/auth/products/${ID}',data)
+export function change(id,data) {
+    return put(`/api/v1/products/${id}`,data)
 }
 
 /*
@@ -35,8 +35,8 @@ export function change(ID,data) {
 */
 
 
-export function delt(ID,data) {
-    return delt('/api/v1/auth/products/${ID}')
+export function delte(id,data) {
+    return del(`/api/v1/products/${id}`)
 }
 
 export function getOneById(id) {
